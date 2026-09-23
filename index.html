@@ -1,13 +1,51 @@
 <!doctype html>
-<html lang="fa" dir="rtl">
+<!-- ==========================================================
+     🌐 سند اصلی پروژه «کتابخانه خوانش گستر»
+     ==========================================================
+     - زبان سند: فارسی (fa)
+     - جهت‌دهی: راست‌به‌چپ (RTL)
+     - تم پیش‌فرض: روشن (light)
+     - استاندارد دسترس‌پذیری: رعایت اصول WCAG 2.1 با استفاده
+       از اتریبیوت‌های ARIA، ساختار معنایی (Semantic) و
+       پشتیبانی از فناوری‌های کمکی (Assistive Technologies).
+========================================================== -->
+<html lang="fa" dir="rtl" data-theme="light">
+  <!-- ==========================================================
+       📋 بخش سرصفحه سند (Head Section)
+       ==========================================================
+       شامل: متادیتای اصلی، پروتکل Open Graph، تنظیمات تم،
+       آیکون سایت، لینک فونت وزیرمتن و فایل استایل اصلی.
+       ========================================================== -->
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="نمونه کار صفحه راهنمای خدمات کتابخانه" />
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-    <link rel="stylesheet" href="CSS/Style.css" />
-    <title>صفحه راهنمای خدمات کتابخانه</title>
+    <!-- متای توضیحات سئو (SEO Description) -->
+    <meta
+      name="description"
+      content="کتابخانه خوانش گستر؛ مرجع خدمات کتابخانه‌ای، عضویت و فضای مطالعه در تهران"
+    />
+    <!-- مشخصات نویسنده سند -->
+    <meta name="author" content="Mohammad Heydari" />
+    <!-- رنگ تم مرورگرهای موبایل (با تغییر تم توسط JS به‌روز می‌شود) -->
+    <meta name="theme-color" content="#f7f2e2" />
 
+    <!-- پروتکل Open Graph برای اشتراک‌گذاری در شبکه‌های اجتماعی -->
+    <meta property="og:title" content="کتابخانه خوانش گستر" />
+    <meta property="og:description" content="جایی برای یادگیری و مطالعه" />
+    <meta property="og:type" content="website" />
+
+    <!-- آیکون سایت (Favicon) -->
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <!-- فایل استایل اصلی پروژه -->
+    <link rel="stylesheet" href="CSS/Style.css" />
+    <title>صفحه راهنمای خدمات کتابخانه خوانش گستر</title>
+
+    <!-- ==========================================================
+         🔤 بارگذاری فونت وزیرمتن (Vazirmatn) از سرویس Google Fonts
+         ==========================================================
+         - استفاده از `preconnect` برای کاهش تأخیر در برقراری اتصال.
+         - `display=swap` برای جلوگیری از پنهان شدن متن در زمان بارگذاری فونت (FOIT).
+         ========================================================== -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -15,12 +53,140 @@
       rel="stylesheet"
     />
   </head>
+
+  <!-- ==========================================================
+       🏗️ بدنه اصلی سند (Body Section)
+       ==========================================================
+       ساختار کلی بدنه شامل:
+       ۱. صفحه بارگذاری (Loading Screen)
+       ۲. نوار پیشرفت مطالعه (Reading Progress)
+       ۳. دکمه تغییر تم (Theme Toggle)
+       ۴. سربرگ و ناوبری (Header & Navigation)
+       ۵. محتوای اصلی (Main Content) شامل شش سکشن
+       ۶. دکمه بازگشت به بالا (Back to Top)
+       ۷. پاورقی (Footer)
+       ========================================================== -->
   <body>
-    <header class="header">
-      <div class="logo_container">
-        <h2 class="logo">کتاب خانه خوانش گستر</h2>
+    <!-- ==========================================================
+         ⏳ صفحه بارگذاری اولیه (Loading Screen)
+         ==========================================================
+         - اتریبیوت `aria-hidden="true"`: این عنصر از دید
+           فناوری‌های کمکی (Screen Readers) پنهان است، زیرا
+           صرفاً یک عنصر تزئینی و موقتی محسوب می‌شود.
+         - این صفحه پس از بارگذاری کامل یا پس از ۱.۸ ثانیه
+           توسط جاوااسکریپت مخفی می‌گردد.
+         ========================================================== -->
+    <div class="loading-screen" id="loadingScreen" aria-hidden="true">
+      <div class="book-loader">
+        <div class="book-page"></div>
+        <div class="book-page"></div>
+        <div class="book-page"></div>
       </div>
-      <nav class="nav">
+      <p class="loading-text">در حال آماده‌سازی کتابخانه...</p>
+    </div>
+
+    <!-- ==========================================================
+         📊 نوار پیشرفت مطالعه (Reading Progress Bar)
+         ==========================================================
+         - `role="progressbar"`: نقش دسترس‌پذیری برای شناسایی
+           عنصر به عنوان یک نشانگر پیشرفت.
+         - `aria-label="پیشرفت مطالعه"`: برچسب دسترس‌پذیری برای
+           توصیف عملکرد نوار پیشرفت در فناوری‌های کمکی.
+         - مقدار پیشرفت به صورت پویا توسط جاوااسکریپت از طریق
+           `transform: scaleX()` به‌روزرسانی می‌شود.
+         ========================================================== -->
+    <div
+      class="reading-progress"
+      id="readingProgress"
+      role="progressbar"
+      aria-label="پیشرفت مطالعه"
+    ></div>
+
+    <!-- ==========================================================
+         🌓 دکمه تغییر تم روشن/تاریک (Theme Toggle Button)
+         ==========================================================
+         - `aria-label="تغییر حالت تاریک/روشن"`: برچسب دسترس‌پذیری
+           برای توصیف عملکرد دکمه در فناوری‌های کمکی.
+         - شامل دو آیکون SVG (خورشید و ماه) که بر اساس تم فعال،
+           یکی نمایش و دیگری پنهان می‌شود.
+         ========================================================== -->
+    <button
+      class="theme-toggle"
+      id="themeToggle"
+      aria-label="تغییر حالت تاریک/روشن"
+    >
+      <!-- آیکون خورشید (نمایش در تم روشن) -->
+      <svg
+        class="icon-sun"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <circle cx="12" cy="12" r="5"></circle>
+        <line x1="12" y1="1" x2="12" y2="3"></line>
+        <line x1="12" y1="21" x2="12" y2="23"></line>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+        <line x1="1" y1="12" x2="3" y2="12"></line>
+        <line x1="21" y1="12" x2="23" y2="12"></line>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+      </svg>
+      <!-- آیکون ماه (نمایش در تم تاریک) -->
+      <svg
+        class="icon-moon"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+
+    <!-- ==========================================================
+         📌 سربرگ و ناوبری اصلی (Header & Navigation)
+         ==========================================================
+         - `role="banner"`: نقش دسترس‌پذیری برای شناسایی این عنصر
+           به عنوان سربرگ اصلی صفحه.
+         - شامل: دکمه منوی همبرگری (موبایل)، لوگوی سایت و
+           منوی ناوبری اصلی.
+         - هدر به صورت شناور (Fixed) با افکت شیشه‌ای طراحی شده است.
+         ========================================================== -->
+    <header class="header" role="banner">
+      <!-- دکمه منوی همبرگری (ویژه نمایش در موبایل) -->
+      <!-- `aria-expanded="false"`: وضعیت فعلی منو (باز/بسته) را به
+           فناوری‌های کمکی اطلاع می‌دهد و توسط جاوااسکریپت به‌روز می‌شود. -->
+      <button
+        class="mobile-menu-toggle"
+        id="mobileMenuToggle"
+        aria-label="منو"
+        aria-expanded="false"
+      >
+        <span class="hamburger"></span>
+      </button>
+
+      <!-- لوگوی اصلی سایت -->
+      <div class="logo_container">
+        <h2 class="logo">📖 کتابخانه خوانش گستر</h2>
+      </div>
+
+      <!-- ==========================================================
+           🧭 منوی ناوبری اصلی (Main Navigation)
+           ==========================================================
+           - `role="navigation"`: نقش دسترس‌پذیری برای شناسایی
+             این عنصر به عنوان یک بلوک ناوبری.
+           - `aria-label="منوی اصلی"`: برچسب توصیفی برای تمایز
+             این ناوبری از سایر ناوبری‌های موجود در صفحه (مانند فوتر).
+           - در نمایش دسکتاپ به صورت افقی و در موبایل به صورت
+             آکاردئونی (با کنترل توسط جاوااسکریپت) نمایش داده می‌شود.
+           ========================================================== -->
+      <nav class="nav" id="mainNav" role="navigation" aria-label="منوی اصلی">
         <ul class="nav_list">
           <li><a href="#Introduction" class="nav_link">معرفی</a></li>
           <li><a href="#Services" class="nav_link">خدمات</a></li>
@@ -36,272 +202,709 @@
       </nav>
     </header>
 
-    <main class="main_container">
-      <section class="introduction_section">
-        <div class="introduction_continer">
+    <!-- ==========================================================
+         📦 محتوای اصلی صفحه (Main Content)
+         ==========================================================
+         شامل شش سکشن اصلی:
+         ۱. معرفی کتابخانه (Hero / Introduction)
+         ۲. نقل‌قول ادبی (Quote Band)
+         ۳. خدمات کتابخانه (Services)
+         ۴. ساعات کاری (Working Hours)
+         ۵. قوانین عضویت (Membership Rules)
+         ۶. پرسش‌های متداول (FAQ)
+         ========================================================== -->
+    <main class="main_container" id="main-content">
+      <!-- ==========================================================
+           🏠 سکشن اول: معرفی کتابخانه (Introduction / Hero)
+           ==========================================================
+           - شامل: نشان جایزه (Badge)، عنوان اصلی با افکت
+             ماشین تحریر، متن معرفی و دکمه‌های اقدام (CTA).
+           - تصویر اصلی کتابخانه با قاب تزئینی و نشان شناور.
+           - کلاس `reveal`: این سکشن توسط IntersectionObserver در
+             جاوااسکریپت کنترل می‌شود و هنگام ورود به محدوده دید
+             کاربر، انیمیشن نمایش اجرا می‌گردد.
+           ========================================================== -->
+      <section class="introduction_section reveal">
+        <div class="introduction_container">
+          <span class="section-badge">به خوانش گستر خوش آمدید</span>
+          <!-- عنوان اصلی صفحه با `id="Introduction"` به عنوان لنگر (Anchor)
+               برای لینک‌های ناوبری و همچنین هدف `scroll-margin-top` در CSS. -->
           <h1 id="Introduction" class="introduction_title">
-            کتابخانه خوانش گستر؛ جایی برای یادگیری و مطالعه
+            <!-- افکت ماشین تحریر (Typewriter) توسط جاوااسکریپت پیاده‌سازی می‌شود.
+                 در صورت فعال بودن `prefers-reduced-motion`، انیمیشن غیرفعال خواهد بود. -->
+            <span class="typewriter">کتابخانه خوانش گستر؛</span>
+            <span>جایی برای یادگیری و مطالعه</span>
           </h1>
-
           <p class="introduction_text">
             کتابخانه خوانش گستر با فراهم کردن مجموعه‌ای متنوع از کتاب‌ها، فضای
             مناسب مطالعه و خدمات کتابخانه‌ای، تلاش می‌کند محیطی آرام و در دسترس
             برای مطالعه و یادگیری اعضای خود فراهم کند. استفاده از فضای مطالعه و
             مشاهده اطلاعات خدمات برای همه علاقه‌مندان آزاد است.
           </p>
+          <!-- دکمه‌های اقدام (Call to Action) -->
+          <div class="cta-buttons">
+            <a href="#Membership_Rules" class="btn btn-primary"
+              >عضویت در کتابخانه</a
+            >
+            <a href="#Services" class="btn btn-outline">مشاهده خدمات</a>
+          </div>
         </div>
 
+        <!-- تصویر اصلی کتابخانه با قاب تزئینی -->
         <div class="introduction_image_container">
-          <img
-            class="introduction_image"
-            width="800"
-            height="400"
-            src="Images/library.jpg"
-            alt="نمایی از فضای مطالعه کتابخانه خوانش گستر با قفسه‌های کتاب و میزهای مطالعه"
-          />
+          <div class="image-frame">
+            <!-- `loading="eager"`: بارگذاری فوری تصویر اصلی صفحه (Hero)
+                 برای بهبود شاخص LCP (Largest Contentful Paint). -->
+            <!-- `alt`: متن جایگزین توصیفی برای دسترس‌پذیری و سئو. -->
+            <img
+              class="introduction_image parallax-img"
+              width="800"
+              height="400"
+              src="Images/library.jpg"
+              alt="نمایی از فضای مطالعه کتابخانه خوانش گستر با قفسه‌های کتاب و میزهای مطالعه"
+              loading="eager"
+            />
+            <!-- نشان شناور تزئینی با انیمیشن float -->
+            <div class="floating-badge">
+              <span class="badge-icon">📚</span>
+              <span class="badge-text">بیش از ۱۰,۰۰۰ عنوان کتاب</span>
+            </div>
+          </div>
         </div>
       </section>
 
-      <div class="introduction_quote_container">
+      <!-- ==========================================================
+           💬 سکشن دوم: نقل‌قول ادبی (Quote Band)
+           ==========================================================
+           - یک نوار بصری تمام‌صفحه با گرادیان عمودی که به عنوان
+             یک عنصر جداساز بین سکشن معرفی و خدمات عمل می‌کند.
+           - استفاده از تگ معنایی `<blockquote>` برای نقل‌قول.
+           - `dir="ltr" lang="en"`: جهت‌دهی چپ‌به‌راست و زبان انگلیسی
+             برای متن اصلی نقل‌قول.
+           ========================================================== -->
+      <div class="introduction_quote_container reveal">
         <blockquote class="introduction_quote">
-          <p dir="ltr" lang="en">
+          <div class="quote-mark">"</div>
+          <p dir="ltr" lang="en" class="quote-english">
             I have always imagined that Paradise will be a kind of library.
           </p>
-          <p>همیشه تصور می‌کردم بهشت، چیزی شبیه به کتابخانه خواهد بود.</p>
+          <p class="quote-persian">
+            همیشه تصور می‌کردم بهشت، چیزی شبیه به کتابخانه خواهد بود.
+          </p>
+          <!-- ارجاع به گوینده نقل‌قول با تگ معنایی `<cite>` -->
           <footer>— <cite>خورخه لوئیس بورخس</cite></footer>
         </blockquote>
       </div>
 
-      <section class="services_section">
-        <div class="section_title_container">
-          <h3 id="Services" class="section_title">خدمات</h3>
-          <p class="section_text">
-            اعضا می‌توانند کتاب‌های موجود در مجموعه کتابخانه را برای مطالعه در
-            خارج از کتابخانه به امانت بگیرند. مدت امانت هر کتاب مطابق قوانین
-            کتابخانه تعیین می‌شود.
-
-            <span class="service_time">
-              زمان ارائه خدمت:
-              <time class="time">شنبه تا پنجشنبه، ساعت ۸:۰۰ تا ۱۸:۰۰</time>
-            </span>
+      <!-- ==========================================================
+           🛠️ سکشن سوم: خدمات کتابخانه (Services)
+           ==========================================================
+           - شامل سه کارت خدمات: امانت کتاب، فضای مطالعه و عضویت.
+           - ساختار شبکه‌ای (Grid) با سه ستون در نمایش دسکتاپ.
+           - هر کارت شامل: آیکون، عنوان، توضیحات و متادیتای زمانی.
+           ========================================================== -->
+      <section class="services_section reveal">
+        <div class="section_header">
+          <h2 id="Services" class="section_main_title">خدمات ما</h2>
+          <p class="section_description">
+            مجموعه‌ای از خدمات برای دوستداران کتاب و مطالعه
           </p>
         </div>
-        <div class="section_title_container">
-          <h3 class="section_title">فضای مطالعه</h3>
-          <p class="section_text">
-            فضای مطالعه کتابخانه برای افرادی فراهم شده است که به محیطی آرام و
-            مناسب برای مطالعه، انجام تکالیف یا فعالیت‌های پژوهشی نیاز دارند.
 
-            <span class="service_time">
-              زمان ارائه خدمت:
-              <time class="time">شنبه تا پنجشنبه، ساعت ۸:۰۰ تا ۲۰:۰۰</time>
-            </span>
-          </p>
-        </div>
-        <div class="section_title_container">
-          <h3 class="section_title">عضویت</h3>
-          <p class="section_text">
-            با عضویت در کتابخانه، می‌توانید از خدمات امانت کتاب، استفاده از
-            امکانات مطالعه و سایر خدمات ویژه اعضا بهره‌مند شوید.
+        <div class="services_grid">
+          <!-- کارت خدمت اول: امانت کتاب -->
+          <div class="service_card">
+            <div class="service_icon">📖</div>
+            <h3 class="service_title">امانت کتاب</h3>
+            <p class="service_text">
+              اعضا می‌توانند کتاب‌های موجود در مجموعه کتابخانه را برای مطالعه در
+              خارج از کتابخانه به امانت بگیرند. مدت امانت هر کتاب مطابق قوانین
+              کتابخانه تعیین می‌شود.
+            </p>
+            <div class="service_meta">
+              <span class="service_time">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                شنبه تا پنجشنبه، ۸:۰۰ تا ۱۸:۰۰
+              </span>
+            </div>
+          </div>
 
-            <span class="service_time">
-              زمان ارائه خدمت:
-              <time class="time">شنبه تا پنجشنبه، ساعت ۸:۰۰ تا ۱۷:۰۰</time>
-            </span>
-          </p>
+          <!-- کارت خدمت دوم: فضای مطالعه -->
+          <div class="service_card">
+            <div class="service_icon">🪑</div>
+            <h3 class="service_title">فضای مطالعه</h3>
+            <p class="service_text">
+              فضای مطالعه کتابخانه برای افرادی فراهم شده است که به محیطی آرام و
+              مناسب برای مطالعه، انجام تکالیف یا فعالیت‌های پژوهشی نیاز دارند.
+            </p>
+            <div class="service_meta">
+              <span class="service_time">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                شنبه تا پنجشنبه، ۸:۰۰ تا ۲۰:۰۰
+              </span>
+            </div>
+          </div>
+
+          <!-- کارت خدمت سوم: عضویت -->
+          <div class="service_card">
+            <div class="service_icon">💳</div>
+            <h3 class="service_title">عضویت</h3>
+            <p class="service_text">
+              با عضویت در کتابخانه، می‌توانید از خدمات امانت کتاب، استفاده از
+              امکانات مطالعه و سایر خدمات ویژه اعضا بهره‌مند شوید.
+            </p>
+            <div class="service_meta">
+              <span class="service_time">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                شنبه تا پنجشنبه، ۸:۰۰ تا ۱۷:۰۰
+              </span>
+            </div>
+          </div>
         </div>
       </section>
 
-      <section class="working_hours_section">
-        <table class="working_hours_table">
-          <caption class="table_caption" id="Working_hours">
-            ساعات کاری کتابخانه خوانش گستر
-          </caption>
+      <!-- ==========================================================
+           🕒 سکشن چهارم: ساعات کاری (Working Hours)
+           ==========================================================
+           - جدول ساعات کاری کتابخانه با ساختار معنایی کامل.
+           - `scope="col"`: مشخص‌سازی سرستون‌ها برای دسترس‌پذیری
+             و شناسایی ارتباط بین سلول‌ها و سربرگ‌های جدول.
+           - `<caption>`: عنوان توصیفی جدول برای فناوری‌های کمکی
+             (در CSS به صورت بصری پنهان شده ولی برای صفحه‌خوان‌ها در دسترس است).
+           - `data-label`: اتریبیوت داده‌ای برای نمایش برچسب‌ها در
+             حالت واکنش‌گرا (موبایل) از طریق `content: attr(data-label)`.
+           ========================================================== -->
+      <section class="working_hours_section reveal">
+        <div class="section_header">
+          <h2 id="Working_hours" class="section_main_title">ساعات کاری</h2>
+          <p class="section_description">برنامه زمانی کتابخانه خوانش گستر</p>
+        </div>
 
-          <thead class="table_head">
-            <tr class="table_row">
-              <th class="table_header">روز</th>
-              <th class="table_header">ساعت شروع</th>
-              <th class="table_header">ساعت پایان</th>
-              <th class="table_header">وضعیت</th>
-            </tr>
-          </thead>
-
-          <tbody class="table_body">
-            <tr class="table_row">
-              <td class="table_data">شنبه</td>
-              <td class="table_data">۸:۰۰</td>
-              <td class="table_data">۲۰:۰۰</td>
-              <td class="table_data">باز</td>
-            </tr>
-
-            <tr class="table_row">
-              <td class="table_data">یکشنبه</td>
-              <td class="table_data">۸:۰۰</td>
-              <td class="table_data">۲۰:۰۰</td>
-              <td class="table_data">باز</td>
-            </tr>
-
-            <tr class="table_row">
-              <td class="table_data">دوشنبه</td>
-              <td class="table_data">۸:۰۰</td>
-              <td class="table_data">۲۰:۰۰</td>
-              <td class="table_data">باز</td>
-            </tr>
-
-            <tr class="table_row">
-              <td class="table_data">سه‌شنبه</td>
-              <td class="table_data">۸:۰۰</td>
-              <td class="table_data">۲۰:۰۰</td>
-              <td class="table_data">باز</td>
-            </tr>
-
-            <tr class="table_row">
-              <td class="table_data">چهارشنبه</td>
-              <td class="table_data">۸:۰۰</td>
-              <td class="table_data">۲۰:۰۰</td>
-              <td class="table_data">باز</td>
-            </tr>
-
-            <tr class="table_row">
-              <td class="table_data">پنجشنبه</td>
-              <td class="table_data">۸:۰۰</td>
-              <td class="table_data">۱۸:۰۰</td>
-              <td class="table_data">باز</td>
-            </tr>
-
-            <tr class="table_row">
-              <td class="table_data">جمعه</td>
-              <td class="table_data">—</td>
-              <td class="table_data">—</td>
-              <td class="table_data">تعطیل</td>
-            </tr>
-          </tbody>
-
-          <tfoot class="table_footer">
-            <tr class="table_row">
-              <td class="table_data table_note" colspan="4">
-                ساعات کاری ممکن است در روزهای تعطیل رسمی تغییر کند.
-              </td>
-            </tr>
-          </tfoot>
-        </table>
+        <div class="table_wrapper">
+          <table class="working_hours_table">
+            <!-- عنوان توصیفی جدول برای فناوری‌های کمکی -->
+            <caption class="table_caption">
+              ساعات کاری کتابخانه خوانش گستر
+            </caption>
+            <thead class="table_head">
+              <tr class="table_row">
+                <!-- `scope="col"`: هر سرستون به عنوان مرجع برای تمام
+                     سلول‌های زیرین خود در همان ستون عمل می‌کند. -->
+                <th class="table_header" scope="col">روز</th>
+                <th class="table_header" scope="col">ساعت شروع</th>
+                <th class="table_header" scope="col">ساعت پایان</th>
+                <th class="table_header" scope="col">وضعیت</th>
+              </tr>
+            </thead>
+            <tbody class="table_body">
+              <!-- ردیف‌های شنبه تا پنجشنبه -->
+              <tr class="table_row">
+                <td class="table_data" data-label="روز">شنبه</td>
+                <td class="table_data" data-label="شروع">۸:۰۰</td>
+                <td class="table_data" data-label="پایان">۲۰:۰۰</td>
+                <td class="table_data" data-label="وضعیت">باز</td>
+              </tr>
+              <tr class="table_row">
+                <td class="table_data" data-label="روز">یکشنبه</td>
+                <td class="table_data" data-label="شروع">۸:۰۰</td>
+                <td class="table_data" data-label="پایان">۲۰:۰۰</td>
+                <td class="table_data" data-label="وضعیت">باز</td>
+              </tr>
+              <tr class="table_row">
+                <td class="table_data" data-label="روز">دوشنبه</td>
+                <td class="table_data" data-label="شروع">۸:۰۰</td>
+                <td class="table_data" data-label="پایان">۲۰:۰۰</td>
+                <td class="table_data" data-label="وضعیت">باز</td>
+              </tr>
+              <tr class="table_row">
+                <td class="table_data" data-label="روز">سه‌شنبه</td>
+                <td class="table_data" data-label="شروع">۸:۰۰</td>
+                <td class="table_data" data-label="پایان">۲۰:۰۰</td>
+                <td class="table_data" data-label="وضعیت">باز</td>
+              </tr>
+              <tr class="table_row">
+                <td class="table_data" data-label="روز">چهارشنبه</td>
+                <td class="table_data" data-label="شروع">۸:۰۰</td>
+                <td class="table_data" data-label="پایان">۲۰:۰۰</td>
+                <td class="table_data" data-label="وضعیت">باز</td>
+              </tr>
+              <tr class="table_row">
+                <td class="table_data" data-label="روز">پنجشنبه</td>
+                <td class="table_data" data-label="شروع">۸:۰۰</td>
+                <td class="table_data" data-label="پایان">۱۸:۰۰</td>
+                <td class="table_data" data-label="وضعیت">باز</td>
+              </tr>
+              <!-- ردیف جمعه (تعطیل) -->
+              <tr class="table_row">
+                <td class="table_data" data-label="روز">جمعه</td>
+                <td class="table_data" data-label="شروع">—</td>
+                <td class="table_data" data-label="پایان">—</td>
+                <td class="table_data" data-label="وضعیت">تعطیل</td>
+              </tr>
+            </tbody>
+            <tfoot class="table_footer">
+              <tr class="table_row">
+                <!-- `colspan="4"`: ادغام چهار سلول برای نمایش یک یادداشت سراسری -->
+                <td class="table_data table_note" colspan="4">
+                  ⚠️ ساعات کاری ممکن است در روزهای تعطیل رسمی تغییر کند.
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
       </section>
 
-      <section class="membership_rules_section">
-        <h2 id="Membership_Rules" class="section_title">قوانین عضویت</h2>
+      <!-- ==========================================================
+           📝 سکشن پنجم: قوانین عضویت (Membership Rules)
+           ==========================================================
+           - شامل دو کارت اطلاعاتی:
+             ۱. مراحل عضویت (لیست مرتب `<ol>`)
+             ۲. مدارک لازم (لیست نامرتب `<ul>`)
+           - ساختار شبکه‌ای دو ستونه در نمایش دسکتاپ.
+           ========================================================== -->
+      <section class="membership_rules_section reveal">
+        <div class="section_header">
+          <h2 id="Membership_Rules" class="section_main_title">قوانین عضویت</h2>
+          <p class="section_description">
+            راهنمای کامل پیوستن به جمع اعضای کتابخانه
+          </p>
+        </div>
 
         <div class="subsection_container">
-          <div class="membership_steps_container">
-            <h3 class="subsection_title">مراحل عضویت در کتابخانه</h3>
-            <ul class="membership_steps">
+          <!-- کارت اول: مراحل عضویت -->
+          <div class="membership_steps_container card">
+            <div class="card_header">
+              <span class="card_icon">📋</span>
+              <h3 class="subsection_title">مراحل عضویت در کتابخانه</h3>
+            </div>
+            <!-- لیست مرتب (Ordered List) برای نمایش ترتیب مراحل -->
+            <ol class="membership_steps">
               <li class="membership_item">
-                فرم عضویت را از بخش پذیرش دریافت و تکمیل کنید.
+                <span class="step-number">۱</span>
+                <span class="step-content"
+                  >فرم عضویت را از بخش پذیرش دریافت و تکمیل کنید.</span
+                >
               </li>
               <li class="membership_item">
-                مدارک موردنیاز را به مسئول پذیرش تحویل دهید.
+                <span class="step-number">۲</span>
+                <span class="step-content"
+                  >مدارک موردنیاز را به مسئول پذیرش تحویل دهید.</span
+                >
               </li>
               <li class="membership_item">
-                اطلاعات ثبت‌شده توسط مسئول کتابخانه بررسی می‌شود.
+                <span class="step-number">۳</span>
+                <span class="step-content"
+                  >اطلاعات ثبت‌شده توسط مسئول کتابخانه بررسی می‌شود.</span
+                >
               </li>
-              <li class="membership_item">کارت عضویت برای شما صادر می‌شود.</li>
               <li class="membership_item">
-                پس از دریافت کارت، می‌توانید از خدمات ویژه اعضا استفاده کنید.
+                <span class="step-number">۴</span>
+                <span class="step-content"
+                  >کارت عضویت برای شما صادر می‌شود.</span
+                >
+              </li>
+              <li class="membership_item">
+                <span class="step-number">۵</span>
+                <span class="step-content"
+                  >پس از دریافت کارت، می‌توانید از خدمات ویژه اعضا استفاده
+                  کنید.</span
+                >
+              </li>
+            </ol>
+          </div>
+
+          <!-- کارت دوم: مدارک لازم -->
+          <div class="required_documents_container card">
+            <div class="card_header">
+              <span class="card_icon">📄</span>
+              <h3 class="subsection_title">مدارک لازم برای عضویت</h3>
+            </div>
+            <!-- لیست نامرتب (Unordered List) برای نمایش مدارک بدون ترتیب خاص -->
+            <ul class="required_documents">
+              <li class="document_item">
+                <!-- آیکون تیک (Check) به صورت درون‌خطی (Inline SVG) -->
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>کارت شناسایی معتبر</span>
+              </li>
+              <li class="document_item">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>یک قطعه عکس</span>
+              </li>
+              <li class="document_item">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>شماره تماس</span>
+              </li>
+              <li class="document_item">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>تکمیل فرم عضویت</span>
+              </li>
+              <li class="document_item">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>ارائه اطلاعات تماس اضطراری در صورت نیاز</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================================
+           ❓ سکشن ششم: پرسش‌های متداول (FAQ - Accordion)
+           ==========================================================
+           - استفاده از تگ معنایی `<details>` و `<summary>` برای
+             پیاده‌سازی بومی آکاردئون (بدون نیاز به جاوااسکریپت
+             برای عملکرد پایه).
+           - انیمیشن باز و بسته شدن ارتفاع توسط جاوااسکریپت
+             مدیریت می‌شود (تابع‌های `animateOpen` و `animateClose`).
+           - هر آیتم شامل: سؤال (`<summary>`) و پاسخ
+             (`<div class="faq_answer_wrap">`).
+           - آیکون پلاس/مینوس به صورت تزئینی با کلاس `faq-icon`
+             و از طریق CSS پیاده‌سازی شده است.
+           ========================================================== -->
+      <section class="faq_section reveal">
+        <div class="section_header">
+          <h2 id="Frequently_Asked_Questions" class="section_main_title">
+            پرسش‌های متداول
+          </h2>
+          <p class="section_description">پاسخ به رایج‌ترین سوالات شما</p>
+        </div>
+
+        <div class="faq_container">
+          <!-- پرسش اول -->
+          <details class="faq_item">
+            <summary class="faq_question">
+              <span>چگونه می‌توانم عضو کتابخانه شوم؟</span>
+              <span class="faq-icon"></span>
+            </summary>
+            <div class="faq_answer_wrap">
+              <div class="faq_answer">
+                برای عضویت، ابتدا فرم عضویت را تکمیل کنید و سپس مدارک موردنیاز
+                را به بخش پذیرش تحویل دهید. پس از بررسی اطلاعات، کارت عضویت صادر
+                خواهد شد.
+              </div>
+            </div>
+          </details>
+
+          <!-- پرسش دوم -->
+          <details class="faq_item">
+            <summary class="faq_question">
+              <span>آیا استفاده از فضای مطالعه برای همه آزاد است؟</span>
+              <span class="faq-icon"></span>
+            </summary>
+            <div class="faq_answer_wrap">
+              <div class="faq_answer">
+                بله. استفاده از فضای مطالعه برای مراجعه‌کنندگان امکان‌پذیر است.
+                اعضای کتابخانه می‌توانند از امکانات و خدمات ویژه اعضا نیز
+                استفاده کنند.
+              </div>
+            </div>
+          </details>
+
+          <!-- پرسش سوم -->
+          <details class="faq_item">
+            <summary class="faq_question">
+              <span>چند کتاب می‌توانم به امانت بگیرم؟</span>
+              <span class="faq-icon"></span>
+            </summary>
+            <div class="faq_answer_wrap">
+              <div class="faq_answer">
+                هر عضو می‌تواند در هر نوبت تا سه کتاب به امانت بگیرد. مدت امانت
+                کتاب‌ها مطابق قوانین کتابخانه تعیین می‌شود.
+              </div>
+            </div>
+          </details>
+
+          <!-- پرسش چهارم -->
+          <details class="faq_item">
+            <summary class="faq_question">
+              <span>آیا امکان تمدید مدت امانت وجود دارد؟</span>
+              <span class="faq-icon"></span>
+            </summary>
+            <div class="faq_answer_wrap">
+              <div class="faq_answer">
+                در صورتی که کتاب توسط عضو دیگری رزرو نشده باشد، امکان تمدید مدت
+                امانت وجود دارد. برای تمدید می‌توانید به بخش امانت مراجعه کنید.
+              </div>
+            </div>
+          </details>
+
+          <!-- پرسش پنجم -->
+          <details class="faq_item">
+            <summary class="faq_question">
+              <span>آیا کتابخانه در روزهای جمعه باز است؟</span>
+              <span class="faq-icon"></span>
+            </summary>
+            <div class="faq_answer_wrap">
+              <div class="faq_answer">
+                خیر. کتابخانه در روزهای جمعه تعطیل است. ساعات کاری در روزهای
+                دیگر مطابق جدول ساعات کاری اعلام‌شده است.
+              </div>
+            </div>
+          </details>
+        </div>
+      </section>
+    </main>
+
+    <!-- ==========================================================
+         ⬆️ دکمه بازگشت به بالا (Back to Top Button)
+         ==========================================================
+         - `aria-label="بازگشت به بالا"`: برچسب دسترس‌پذیری برای
+           توصیف عملکرد دکمه در فناوری‌های کمکی.
+         - این دکمه پس از اسکرول بیش از ۴۰۰ پیکسل توسط
+           جاوااسکریپت نمایش داده می‌شود.
+         ========================================================== -->
+    <button class="back-to-top" id="backToTop" aria-label="بازگشت به بالا">
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <polyline points="18 15 12 9 6 15"></polyline>
+      </svg>
+    </button>
+
+    <!-- ==========================================================
+         🦶 پاورقی سایت (Footer)
+         ==========================================================
+         - `role="contentinfo"`: نقش دسترس‌پذیری برای شناسایی این
+           عنصر به عنوان بخش اطلاعاتی پاورقی.
+         - ساختار چهار ستونه:
+           ۱. برند و شبکه‌های اجتماعی
+           ۲. دسترسی سریع (ناوبری فوتر)
+           ۳. ساعات کاری
+           ۴. تماس با ما (آدرس، تلفن، ایمیل)
+         - `id="Contact_us"`: لنگر (Anchor) برای لینک «تماس با ما»
+           در منوی ناوبری اصلی.
+         - `aria-label` در لینک‌های شبکه‌های اجتماعی: برچسب‌های
+           دسترس‌پذیری برای توصیف عملکرد هر لینک.
+         ========================================================== -->
+    <footer class="footer" role="contentinfo">
+      <div class="footer_container">
+        <div class="footer_top">
+          <!-- ستون اول: برند و شبکه‌های اجتماعی -->
+          <div class="footer_brand">
+            <h2 class="footer_logo">📖 کتابخانه خوانش گستر</h2>
+            <p class="footer_tagline">
+              خانه دوم کتاب‌خوان‌ها؛ جایی برای یادگیری، مطالعه و آرامش.
+            </p>
+            <!-- لینک‌های شبکه‌های اجتماعی -->
+            <div class="social_links">
+              <!-- `aria-label="اینستاگرام"`: برچسب دسترس‌پذیری برای
+                   شناسایی لینک اینستاگرام در فناوری‌های کمکی. -->
+              <a href="#" class="social_link" aria-label="اینستاگرام">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                  <path
+                    d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"
+                  ></path>
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                </svg>
+              </a>
+              <!-- `aria-label="تلگرام"`: برچسب دسترس‌پذیری برای
+                   شناسایی لینک تلگرام در فناوری‌های کمکی. -->
+              <a href="#" class="social_link" aria-label="تلگرام">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- ستون دوم: دسترسی سریع (ناوبری فوتر) -->
+          <!-- `aria-label="دسترسی سریع"`: برچسب توصیفی برای تمایز
+               این ناوبری از منوی اصلی سربرگ. -->
+          <nav class="footer_col" aria-label="دسترسی سریع">
+            <h3 class="footer_title">دسترسی سریع</h3>
+            <ul class="footer_nav">
+              <li><a href="#Introduction">معرفی کتابخانه</a></li>
+              <li><a href="#Services">خدمات</a></li>
+              <li><a href="#Working_hours">ساعات کاری</a></li>
+              <li><a href="#Membership_Rules">قوانین عضویت</a></li>
+              <li><a href="#Frequently_Asked_Questions">پرسش‌های متداول</a></li>
+            </ul>
+          </nav>
+
+          <!-- ستون سوم: ساعات کاری -->
+          <div class="footer_col">
+            <h3 class="footer_title">ساعات کاری</h3>
+            <ul class="footer_hours">
+              <li>
+                <span>شنبه تا چهارشنبه</span>
+                <span class="fh_time">۸:۰۰ – ۲۰:۰۰</span>
+              </li>
+              <li>
+                <span>پنجشنبه</span>
+                <span class="fh_time">۸:۰۰ – ۱۸:۰۰</span>
+              </li>
+              <li>
+                <span>جمعه</span>
+                <span class="fh_closed">تعطیل</span>
               </li>
             </ul>
           </div>
 
-          <div class="required_documents_container">
-            <h3 class="subsection_title">مدارک لازم برای عضویت</h3>
-            <ol class="required_documents">
-              <li class="document_item">کارت شناسایی معتبر</li>
-              <li class="document_item">یک قطعه عکس</li>
-              <li class="document_item">شماره تماس</li>
-              <li class="document_item">تکمیل فرم عضویت</li>
-              <li class="document_item">
-                ارائه اطلاعات تماس اضطراری در صورت نیاز
-              </li>
-            </ol>
+          <!-- ستون چهارم: تماس با ما -->
+          <!-- `id="Contact_us"`: لنگر (Anchor) برای لینک «تماس با ما»
+               در منوی ناوبری اصلی سربرگ. -->
+          <div class="footer_col">
+            <h3 class="footer_title" id="Contact_us">تماس با ما</h3>
+            <!-- تگ معنایی `<address>` برای نمایش اطلاعات تماس -->
+            <address class="footer_address">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              <span>تهران، خیابان فرهنگ، کوچه کتاب، پلاک ۲۴</span>
+            </address>
+            <!-- لینک‌های تماس (تلفن و ایمیل) با پروتکل‌های `tel:` و `mailto:` -->
+            <div class="footer_links">
+              <a class="footer_link" href="tel:+989105403918">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
+                  ></path>
+                </svg>
+                تماس تلفنی
+              </a>
+              <a class="footer_link" href="mailto:mh348797@gmail.com">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                  ></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                ارسال ایمیل
+              </a>
+            </div>
           </div>
         </div>
-      </section>
 
-      <section class="faq_section">
-        <h2 id="Frequently_Asked_Questions" class="frequently_title">
-          پرسش‌های متداول
-        </h2>
-
-        <details class="faq_item">
-          <summary class="faq_question">
-            چگونه می‌توانم عضو کتابخانه شوم؟
-          </summary>
-          <div class="faq_answer">
-            برای عضویت، ابتدا فرم عضویت را تکمیل کنید و سپس مدارک موردنیاز را به
-            بخش پذیرش تحویل دهید. پس از بررسی اطلاعات، کارت عضویت صادر خواهد شد.
-          </div>
-        </details>
-
-        <details class="faq_item">
-          <summary class="faq_question">
-            آیا استفاده از فضای مطالعه برای همه آزاد است؟
-          </summary>
-          <div class="faq_answer">
-            بله. استفاده از فضای مطالعه برای مراجعه‌کنندگان امکان‌پذیر است.
-            اعضای کتابخانه می‌توانند از امکانات و خدمات ویژه اعضا نیز استفاده
-            کنند.
-          </div>
-        </details>
-
-        <details class="faq_item">
-          <summary class="faq_question">
-            چند کتاب می‌توانم به امانت بگیرم؟
-          </summary>
-          <div class="faq_answer">
-            هر عضو می‌تواند در هر نوبت تا سه کتاب به امانت بگیرد. مدت امانت
-            کتاب‌ها مطابق قوانین کتابخانه تعیین می‌شود.
-          </div>
-        </details>
-
-        <details class="faq_item">
-          <summary class="faq_question">
-            آیا امکان تمدید مدت امانت وجود دارد؟
-          </summary>
-          <div class="faq_answer">
-            در صورتی که کتاب توسط عضو دیگری رزرو نشده باشد، امکان تمدید مدت
-            امانت وجود دارد. برای تمدید می‌توانید به بخش امانت مراجعه کنید.
-          </div>
-        </details>
-
-        <details class="faq_item">
-          <summary class="faq_question">
-            آیا کتابخانه در روزهای جمعه باز است؟
-          </summary>
-          <div class="faq_answer">
-            خیر. کتابخانه در روزهای جمعه تعطیل است. ساعات کاری در روزهای دیگر
-            مطابق جدول ساعات کاری اعلام‌شده است.
-          </div>
-        </details>
-      </section>
-    </main>
-
-    <div class="link_info_container">
-      <a href="#Services" class="link_info">بخش اصلی</a>
-    </div>
-
-    <footer class="footer">
-      <h2 id="Contact_us" class="footer_title">تماس با ما</h2>
-
-      <address class="footer_address">
-        تهران، خیابان فرهنگ، کوچه کتاب، پلاک ۲۴، کتابخانه خوانش گستر
-      </address>
-
-      <a class="footer_link" href="tel:+989105403918"> تلفن </a>
-
-      <a class="footer_link" href="mailto:mh348797@gmail.com"> ایمیل </a>
-      <small class="copyright">
-        تمامی حقوق این وب‌سایت متعلق به کتابخانه خوانش گستر است. ©
-      </small>
-      <small class="last_updated"> آخرین به‌روزرسانی: ۲۶ مرداد ۱۴۰۵ </small>
+        <!-- نوار پایانی فوتر: حق نشر و تاریخ به‌روزرسانی -->
+        <div class="footer_bottom">
+          <small class="copyright"
+            >© ۱۴۰۵ - تمامی حقوق این وب‌سایت متعلق به کتابخانه خوانش گستر
+            است.</small
+          >
+          <small class="last_updated">آخرین به‌روزرسانی: ۲۶ مرداد ۱۴۰۵</small>
+        </div>
+      </div>
     </footer>
+
+    <!-- بارگذاری فایل جاوااسکریپت اصلی پروژه -->
+    <!-- استفاده از تگ `<script>` در انتهای `<body>` برای اطمینان از
+         بارگذاری کامل عناصر DOM قبل از اجرای اسکریپت‌ها. -->
+    <script src="JS/Script.js"></script>
   </body>
 </html>
